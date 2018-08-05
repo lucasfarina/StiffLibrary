@@ -20,6 +20,7 @@ namespace StiffLibrary.XML
         [DataMember]
         public XMLTag Root;
     }
+
     [DataContract]
     public class XMLPrologue : XMLTag
     {
@@ -73,6 +74,7 @@ namespace StiffLibrary.XML
             return myOpeningTag;
         }
     }
+
     [DataContract]
     public class XMLTag : XMLAttribute
     {
@@ -95,6 +97,7 @@ namespace StiffLibrary.XML
             this.children = new List<XMLTag>();
             this.attributes = new List<XMLAttribute>();
         }
+
         [DataMember]
         private List<XMLTag> children;
         [DataMember]
@@ -226,6 +229,7 @@ namespace StiffLibrary.XML
             return lines.ToArray();
         }
     }
+
     [DataContract]
     public class XMLAttribute
     {
@@ -234,6 +238,7 @@ namespace StiffLibrary.XML
             identifier = Identifier;
             value = Value;
         }
+
         [DataMember]
         private String identifier;
         [DataMember]
