@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace StiffLibrary.XML
 {
+    [DataContract]
     public class XMLFile
     {
         public XMLFile(XMLPrologue prologue, XMLTag root)
@@ -13,13 +15,20 @@ namespace StiffLibrary.XML
             Prologue = prologue;
             Root = root;
         }
-
+        [DataMember]
         public XMLPrologue Prologue;
+        [DataMember]
         public XMLTag Root;
     }
-
+    [DataContract]
     public class XMLPrologue : XMLTag
     {
+        public XMLPrologue() : base("xml", "", null, null)
+        {
+            this.SetAttribute(new XMLAttribute("version", "1.0"));
+            this.SetAttribute(new XMLAttribute("enconding", "UTF-8"));
+        }
+
         public XMLPrologue(string version, string enconding, XMLAttribute[] Attributes = null) : base("xml", "", new XMLTag[0], Attributes)
         {
             this.SetAttribute(new XMLAttribute("version", version));
@@ -64,7 +73,7 @@ namespace StiffLibrary.XML
             return myOpeningTag;
         }
     }
-
+    [DataContract]
     public class XMLTag : XMLAttribute
     {
         public XMLTag(string Id, string Value, XMLTag[] Children = null, XMLAttribute[] Attributes = null) : base(Id, Value)
@@ -86,8 +95,9 @@ namespace StiffLibrary.XML
             this.children = new List<XMLTag>();
             this.attributes = new List<XMLAttribute>();
         }
-
+        [DataMember]
         private List<XMLTag> children;
+        [DataMember]
         private List<XMLAttribute> attributes;
 
         public new String Value { get { return value; } set { this.value = value; } } 
@@ -216,7 +226,7 @@ namespace StiffLibrary.XML
             return lines.ToArray();
         }
     }
-
+    [DataContract]
     public class XMLAttribute
     {
         public XMLAttribute(String Identifier, String Value)
@@ -224,8 +234,9 @@ namespace StiffLibrary.XML
             identifier = Identifier;
             value = Value;
         }
-
+        [DataMember]
         private String identifier;
+        [DataMember]
         protected String value;
 
         public String Identifier { get { return identifier; } }
