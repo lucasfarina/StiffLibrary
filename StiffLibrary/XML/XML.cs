@@ -10,6 +10,10 @@ namespace StiffLibrary.XML
     [DataContract]
     public class XMLFile
     {
+        public XMLFile(XMLTag root)
+        {
+            Prologue = new XMLPrologue();
+        }
         public XMLFile(XMLPrologue prologue, XMLTag root)
         {
             Prologue = prologue;
@@ -24,13 +28,13 @@ namespace StiffLibrary.XML
     [DataContract]
     public class XMLPrologue : XMLTag
     {
-        public XMLPrologue() : base("xml", "", null, null)
+        public XMLPrologue() : base("xml", "")
         {
             this.SetAttribute(new XMLAttribute("version", "1.0"));
             this.SetAttribute(new XMLAttribute("enconding", "UTF-8"));
         }
 
-        public XMLPrologue(string version, string enconding, XMLAttribute[] Attributes = null) : base("xml", "", new XMLTag[0], Attributes)
+        public XMLPrologue(string version, string enconding, XMLAttribute[] Attributes) : base("xml", "", new XMLTag[0], Attributes)
         {
             this.SetAttribute(new XMLAttribute("version", version));
             this.SetAttribute(new XMLAttribute("enconding", enconding));
@@ -78,7 +82,14 @@ namespace StiffLibrary.XML
     [DataContract]
     public class XMLTag : XMLAttribute
     {
-        public XMLTag(string Id, string Value, XMLTag[] Children = null, XMLAttribute[] Attributes = null) : base(Id, Value)
+
+        public XMLTag(string Id, string Value = "") : base(Id, Value)
+        {
+            this.children = new List<XMLTag>();
+            this.attributes = new List<XMLAttribute>();
+        }
+
+        public XMLTag(string Id, string Value, XMLTag[] Children, XMLAttribute[] Attributes) : base(Id, Value)
         {
             this.children = new List<XMLTag>();
             this.attributes = new List<XMLAttribute>();
@@ -92,16 +103,10 @@ namespace StiffLibrary.XML
             }
         }
 
-        public XMLTag(string Id) : base(Id, "")
-        {
-            this.children = new List<XMLTag>();
-            this.attributes = new List<XMLAttribute>();
-        }
-
         [DataMember]
-        private List<XMLTag> children;
+        private List<XMLTag> children = new List<XMLTag>();
         [DataMember]
-        private List<XMLAttribute> attributes;
+        private List<XMLAttribute> attributes = new List<XMLAttribute>();
 
         public new String Value { get { return value; } set { this.value = value; } } 
 
@@ -233,7 +238,7 @@ namespace StiffLibrary.XML
     [DataContract]
     public class XMLAttribute
     {
-        public XMLAttribute(String Identifier, String Value)
+        public XMLAttribute(String Identifier, String Value = "")
         {
             identifier = Identifier;
             value = Value;
@@ -279,5 +284,12 @@ namespace StiffLibrary.XML
             }
             return success;
         }
+    }
+
+    public static class Arrays<T>
+    {
+        public static readonly T[] empty = new T[0];
+
+        //public static readonly T[] Empty { get { return empty; } }
     }
 }

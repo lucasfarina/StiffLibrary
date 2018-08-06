@@ -11,7 +11,7 @@ namespace StiffLibrary.XML
         public static string GetXMLFile(string path, out XMLFile xml)
         {
             string success = ""; //Empty equals success, error contains error message
-            xml = new XMLFile(new XMLPrologue("1.0", "utf-8"), new XMLTag("Error", "Couldn't get XMLFile at GetXMLFile(" + path + ").", new XMLTag[0], new XMLAttribute[0]));
+            xml = new XMLFile(new XMLPrologue(), new XMLTag("Error", "Couldn't get XMLFile at GetXMLFile(" + path + ").", new XMLTag[0], new XMLAttribute[0]));
             String[] lines = IOManager.GetFile(path);
             String stream = string.Join(string.Empty, lines);
             XMLPrologue prologue;
@@ -204,7 +204,7 @@ namespace StiffLibrary.XML
         private static bool GetXMLProlog(String stream, out XMLPrologue prolog, out String StreamLeft)
         {
             bool success = false;
-            prolog = new XMLPrologue("1.0", "utf-8");
+            prolog = new XMLPrologue();
             Int32 index = 0;
             string buffer = "";
             int bufferState = 0;//0 = nothing, 1 = prologue, 2 = successful getting prologue ended
@@ -251,7 +251,7 @@ namespace StiffLibrary.XML
                 string[] atts = content.Split(' ');
                 if(atts[0] == "xml")
                 {
-                    XMLPrologue prologue = new XMLPrologue("1.0", "utf-8");
+                    XMLPrologue prologue = new XMLPrologue();
                     success = true;
                     for(int i = 1; i < atts.Length; i++)
                     {
@@ -320,7 +320,7 @@ namespace StiffLibrary.XML
 
         public static void SaveExample(string path)
         {
-            XMLPrologue prologue = new XMLPrologue("1.0", "UTF-8");
+            XMLPrologue prologue = new XMLPrologue();
             XMLTag root = new XMLTag("Person", string.Empty);
             XMLTag nome = new XMLTag("Name", "João da Silva");
             nome.SetAttribute(new XMLAttribute("Compound", "Yes"));
