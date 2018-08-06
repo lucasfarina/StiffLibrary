@@ -10,9 +10,9 @@ namespace StiffLibrary.XML
     [DataContract]
     public class XMLFile
     {
-        public XMLFile(XMLTag root)
+        public XMLFile(XMLTag root) : this(new XMLPrologue(), root)
         {
-            Prologue = new XMLPrologue();
+            
         }
         public XMLFile(XMLPrologue prologue, XMLTag root)
         {
