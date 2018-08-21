@@ -140,6 +140,12 @@ namespace StiffLibrary
             return tList.ToArray();
         }
 
+        public static bool IsNumeric(this string arg)
+        {
+            double i;
+            return double.TryParse(arg, out i);
+        }
+
         //==========================================PRIVATE
         private static bool Compare<T>(T x, T y) where T : class
         {
