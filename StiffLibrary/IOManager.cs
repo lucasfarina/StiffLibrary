@@ -14,8 +14,8 @@ namespace StiffLibrary
             List<String> lines = new List<string>();
             if (File.Exists(path))
             {
-                StreamReader sr = new StreamReader(path);
-                while (sr.Peek() > -1)
+                StreamReader sr = new StreamReader(path, true);
+                while (!sr.EndOfStream)
                 {
                     lines.Add(sr.ReadLine());
                 }

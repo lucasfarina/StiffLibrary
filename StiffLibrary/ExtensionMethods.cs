@@ -120,7 +120,7 @@ namespace StiffLibrary
             string FinalString = "";
 
             int Pos1 = STR.IndexOf(FirstString) + FirstString.Length;
-            string subSTR = STR.Substring(Pos1, STR.Length - Pos1);
+            string subSTR = STR.Substring(Pos1);
             int Pos2 = subSTR.IndexOf(LastString);
             FinalString = STR.Substring(Pos1, Pos2);
             return FinalString;
