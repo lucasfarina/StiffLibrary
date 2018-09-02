@@ -120,11 +120,9 @@ namespace StiffLibrary
             string FinalString = "";
 
             int Pos1 = STR.IndexOf(FirstString) + FirstString.Length;
-            int Pos2 = STR.IndexOf(LastString);
-            if(Pos2 - Pos1 > 0)
-            {
-                FinalString = STR.Substring(Pos1, Pos2 - Pos1);
-            }
+            string subSTR = STR.Substring(Pos1, STR.Length - Pos1);
+            int Pos2 = subSTR.IndexOf(LastString);
+            FinalString = STR.Substring(Pos1, Pos2);
             return FinalString;
         }
 
