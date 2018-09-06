@@ -146,6 +146,13 @@ namespace StiffLibrary
             return double.TryParse(arg, out i);
         }
 
+        public static uint? ToNullableUInt(this string arg)
+        {
+            uint i;
+            if (uint.TryParse(arg, out i)) return i;
+            return null;
+        }
+
         //==========================================PRIVATE
         private static bool Compare<T>(T x, T y) where T : class
         {
