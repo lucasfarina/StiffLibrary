@@ -12,27 +12,34 @@ namespace StiffLibrary
     {
         private NetworkCredential _credentials;
         private string _ftpRoot;
+        private string _port;
+        private bool _keepAlive;
         private bool _usePassive;
         private bool _useBinary;
         private bool _enableSsl;
-        public FtpManager(string ftpRoot, string userName, string password, bool usePassive = false, bool useBinary = false, bool enableSSL = true)
+        public FtpManager(string ftpRoot, string port, string userName, string password, bool keepAlive = false, bool usePassive = true, bool useBinary = false, bool enableSSL = false)
         {
             _ftpRoot = ftpRoot;
+            _keepAlive = keepAlive;
+            _port = port;
             _credentials = new NetworkCredential(userName, password);
             _usePassive = usePassive;
             _useBinary = useBinary;
             _enableSsl = enableSSL;
         }
         public string ftpRoot { get => _ftpRoot; }
+        public string port { get => _port; }
         public NetworkCredential Credentials { get => _credentials; }
+        public bool KeepAlive { get => _keepAlive; }
         public bool UsePassive { get => _usePassive; }
         public bool UseBinary { get => _useBinary; }
         public bool EnableSSl { get => _enableSsl; }
 
         public FtpWebResponse UploadFile(string PathFromRoot, byte[] fileContents)
         {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + "/" + PathFromRoot);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + ":" + port + "/" + PathFromRoot);
             request.Method = WebRequestMethods.Ftp.UploadFile;
+            request.KeepAlive = KeepAlive;
 
             request.Credentials = Credentials;
             request.ContentLength = fileContents.Length;
@@ -51,8 +58,9 @@ namespace StiffLibrary
         public FtpWebResponse DownloadFile(string PathFromRoot, out Stream responseStream)
         {
             responseStream = null;
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + "/" + PathFromRoot);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + ":" + port + "/" + PathFromRoot);
             request.Method = WebRequestMethods.Ftp.DownloadFile;
+            request.KeepAlive = KeepAlive;
 
             request.Credentials = Credentials;
 
@@ -67,8 +75,9 @@ namespace StiffLibrary
 
         public FtpWebResponse DeleteFile(string PathFromRoot)
         {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + "/" + PathFromRoot);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + ":" + port + "/" + PathFromRoot);
             request.Method = WebRequestMethods.Ftp.DeleteFile;
+            request.KeepAlive = KeepAlive;
 
             request.Credentials = Credentials;
 
@@ -78,8 +87,9 @@ namespace StiffLibrary
         public FtpWebResponse GetFiles(string PathFromRoot, out string[] collection)
         {
             collection = null;
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + "/" + PathFromRoot);
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + ":" + port + "/" + PathFromRoot);
             request.Method = WebRequestMethods.Ftp.ListDirectory;
+            request.KeepAlive = KeepAlive;
 
             request.Credentials = Credentials;
 

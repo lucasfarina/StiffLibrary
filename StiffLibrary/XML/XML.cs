@@ -292,4 +292,9 @@ namespace StiffLibrary.XML
 
         //public static readonly T[] Empty { get { return empty; } }
     }
+
+    public interface ISerializable
+    {
+        XMLTag Tag();
+    }
 }
