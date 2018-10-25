@@ -65,7 +65,7 @@ namespace StiffLibrary
             request.Credentials = Credentials;
 
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-            if (response.StatusCode == FtpStatusCode.ClosingData)
+            if (response.StatusCode == FtpStatusCode.OpeningData)
             {
                 responseStream = response.GetResponseStream();
             }
