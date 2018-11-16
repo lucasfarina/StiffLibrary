@@ -39,7 +39,6 @@ namespace StiffLibrary
         {
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpRoot + ":" + port + "/" + PathFromRoot);
             request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.KeepAlive = KeepAlive;
 
             request.Credentials = Credentials;
             request.ContentLength = fileContents.Length;
@@ -50,6 +49,7 @@ namespace StiffLibrary
             using (Stream requestStream = request.GetRequestStream())
             {
                 requestStream.Write(fileContents, 0, fileContents.Length);
+                requestStream.Close();
             }
 
             return (FtpWebResponse)request.GetResponse();
