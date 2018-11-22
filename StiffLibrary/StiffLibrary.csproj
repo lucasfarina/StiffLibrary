@@ -49,9 +49,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Encryptor.cs" />
+    <Compile Include="FtpManager.cs" />
     <Compile Include="IOManager.cs" />
     <Compile Include="LSync.cs" />
     <Compile Include="Mailing.cs" />
+    <Compile Include="MyGrouper.cs" />
     <Compile Include="MySQLSingleton.cs" />
     <Compile Include="XML\XML.cs" />
     <Compile Include="Serializer.cs" />
