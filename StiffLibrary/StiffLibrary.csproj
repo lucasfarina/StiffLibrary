@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Encryptor.cs" />
+    <Compile Include="FName.cs" />
     <Compile Include="FtpManager.cs" />
     <Compile Include="IOManager.cs" />
     <Compile Include="LSync.cs" />
