@@ -49,4 +49,208 @@ namespace StiffLibrary
             File.Decrypt(path);
         }
     }
+
+    public struct CSV
+    {
+        private Dictionary<FName, string[]> _columns; //FName headers and string values
+        private int _rowCount;
+        public CSV(string[] headers, string[,] rows)//10 5
+        {
+            //Initialization
+            _columns = new Dictionary<FName, string[]>();
+            List<FName> headersList = new List<FName>();
+            _rowCount = rows.GetLength(0);
+
+            //Set headers
+            foreach (string header in headers)
+            {
+                headersList.Add(new FName(header));
+            }
+
+            //Invert rows for columns
+            int rowCount = _rowCount;
+            int columnCount = rows.GetLength(1);
+
+            string[,] columns = new string[columnCount, rowCount];
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                for(int w = 0; w < columnCount; w++)
+                {
+                    columns[w, i] = rows[i, w];
+                }
+            }
+            List<string[]> columnsList = new List<string[]>();
+            for(int i = 0; i < columnCount; i++)
+            {
+                List<string> column = new List<string>();
+                for(int w = 0; w < rowCount; w++)
+                {
+                    column.Add(columns[i, w]);
+                }
+                columnsList.Add(column.ToArray());
+            }
+            //finish transposing
+
+            //Add Columns
+            for(int i = 0; i < headersList.Count; i++)
+            {
+                _columns.Add(headersList[i], columnsList[i].ToArray());
+            }
+        }
+
+        public string[] GetRow(int rowNumber)
+        {
+            List<string> row = new List<string>();
+            foreach(FName header in _columns.Keys)
+            {
+                row.Add(_columns[header][rowNumber]);
+            }
+            return row.ToArray();
+        }
+
+        public string[] GetColumn(FName header)
+        {
+            if (!_columns.ContainsKey(header))
+            {
+                return new string[0];
+            }
+            string[] copy = _columns[header];
+            return copy.ToArray();
+        }
+
+        public string[] GetColumn(int columnNumber)
+        {
+            if(columnNumber < 0 || columnNumber >= _columns.Count)
+            {
+                return new string[0];
+            }
+            FName[] copy =_columns.Keys.ToArray();
+            FName columnHeader = copy[columnNumber];
+            return GetColumn(columnHeader);
+        }
+
+        public string GetCell(int row, FName header)
+        {
+            string[] column = GetColumn(header);
+            if(row < 0 || row >= column.Length)
+            {
+                return string.Empty;
+            }
+            return column[row];
+        }
+
+        public string GetCell(int row, int column)
+        {
+            string[] getColumn = GetColumn(column);
+            if (row < 0 || row >= getColumn.Length)
+            {
+                return string.Empty;
+            }
+            return getColumn[row];
+        }
+
+        public FName[] Headers { get { return _columns.Keys.ToArray(); } }
+
+        public int NumberOfRows { get { return _rowCount; } }
+
+        public bool ValidCSV { get { return _columns.Keys.Count > 0; } }
+    }
+
+    public static class CSVManager
+    {
+        public static CSV GetCSV(string path)
+        {
+            string[] lines = IOManager.GetFile(path);
+
+            List<string> headers = new List<string>();
+            List<List<string>> rowsList = new List<List<string>>();
+            bool bIsHeader = true;
+
+            foreach(string line in lines)
+            {
+                List<string> cells = new List<string>();
+                string buffer = "";
+                bool onText = false;
+                
+                for(int i = 0; i < line.Length; i++)
+                {
+                    if (line[i] == '"')
+                        onText = !onText;
+                    else if(!onText && line[i] == ',')
+                    {
+                        cells.Add(buffer);
+                        buffer = "";
+                        continue;
+                    }
+
+                    buffer += line[i];
+                }
+                cells.Add(buffer);
+                if (bIsHeader)
+                {
+                    headers = cells;
+                    bIsHeader = false;
+                }
+                else
+                    rowsList.Add(cells);
+            }
+            if (rowsList.Count <= 0)
+                return new CSV(new string[1] { "Error" }, new string[1, 1] { { "The CSV had no headers" } });
+
+            int numberOfRows = rowsList.Count;
+            int numberOfColumns = headers.Count;
+            string[,] rows = new string[numberOfRows, numberOfColumns];
+
+            for(int i = 0; i < numberOfRows; i++)
+            {
+                for(int w = 0; w < numberOfColumns; w++)
+                {
+                    if (w >= rowsList[i].Count)
+                        rows[i, w] = "";
+                    else
+                        rows[i, w] = rowsList[i][w];
+                }
+            }
+
+            return new CSV(headers.ToArray(), rows);
+        }
+
+        public static bool WriteCSV(string path, CSV csv)
+        {
+            //Check if there are at least headers
+            if (!csv.ValidCSV)
+                return false;
+
+            List<string> linesList = new List<string>();
+
+            //Fill in Headers
+            string headersLine = "";
+            for(int i = 0; i < csv.Headers.Length; i++)
+            {
+                if (i != csv.Headers.Length - 1)
+                    headersLine += csv.Headers[i].ToString() + ",";
+                else
+                    headersLine += csv.Headers[i].ToString();
+            }
+            linesList.Add(headersLine);
+
+            //Fill in Lines
+            for(int i = 0; i < csv.NumberOfRows; i++)
+            {
+                string[] cells = csv.GetRow(i);
+                string line = "";
+                for(int w = 0; w < cells.Length; w++)
+                {
+                    if (w != cells.Length - 1)
+                        line += cells[w] + ",";
+                    else
+                        line += cells[w];
+                }
+                linesList.Add(line);
+            }
+
+            return IOManager.WriteFile(path, linesList.ToArray(), false);
+        }
+    }
 }
