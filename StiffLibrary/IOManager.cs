@@ -248,6 +248,16 @@ namespace StiffLibrary
 
         public FName[] Headers { get { return _columns.Keys.ToArray(); } }
 
+        public string[] GetHeaderNames() {
+
+            List<string> convert = new List<string>();
+            foreach(FName header in Headers)
+            {
+                convert.Add(header.ToString());
+            }
+            return convert.ToArray();
+        }
+
         public int NumberOfRows { get { return _rowCount; } }
 
         public bool ValidCSV { get { return _columns.Keys.Count > 0; } }
