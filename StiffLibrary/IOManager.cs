@@ -130,7 +130,7 @@ namespace StiffLibrary
             return GetColumn(columnHeader);
         }
 
-        public string GetCell(int row, FName header)
+        public string GetCell(FName header, int row)
         {
             string[] column = GetColumn(header);
             if(row < 0 || row >= column.Length)
@@ -140,7 +140,7 @@ namespace StiffLibrary
             return column[row];
         }
 
-        public string GetCell(int row, int column)
+        public string GetCell(int column, int row)
         {
             string[] getColumn = GetColumn(column);
             if (row < 0 || row >= getColumn.Length)
@@ -148,6 +148,69 @@ namespace StiffLibrary
                 return string.Empty;
             }
             return getColumn[row];
+        }
+
+        public bool SetCell(FName column, int row, string newValue)
+        {
+            if (row < 0 || row >= _rowCount)
+                return false;
+            if (!_columns.ContainsKey(column))
+                return false;
+            _columns[column][row] = newValue;
+            return true;
+        }
+
+        public bool SetCell(int column, int row, string newValue)
+        {
+            FName[] copy = _columns.Keys.ToArray();
+            if (column < 0 || column >= copy.Length)
+                return false;
+            FName columnHeader = copy[column];
+            SetCell(columnHeader, row, newValue);
+            return true;
+        }
+
+        public bool SetRow(int row, string[] rowValues)
+        {
+            if (row < 0)
+                return false;
+            if(row >= _rowCount)
+            {
+                foreach(FName header in Headers)
+                {
+                    string[] rows = _columns[header];
+                    System.Array.Resize(ref rows, row+1);
+                    _columns[header] = rows;
+                }
+                _rowCount = row + 1;
+            }
+
+            int headerCount = 0;
+            foreach(FName header in Headers)
+            {
+                if(row >= _columns[header].Length)
+                {
+                    _columns[header][row] = rowValues[headerCount];
+                }
+                headerCount++;
+            }
+            return true;
+        }
+
+        public bool AddColumn(FName header, string defaulValue = "")
+        {
+            if (_columns.ContainsKey(header))
+                return false;
+            else
+            {
+                string[] rows = new string[_rowCount];
+                for(int i = 0; i < _rowCount; i++)
+                {
+                    rows[i] = defaulValue;
+                }
+                _columns.Add(header, rows);
+                return true;
+            }
         }
 
         public FName[] Headers { get { return _columns.Keys.ToArray(); } }
@@ -235,7 +298,7 @@ namespace StiffLibrary
             }
             linesList.Add(headersLine);
 
-            //Fill in Lines
+            //Fill in Lines/Rows
             for(int i = 0; i < csv.NumberOfRows; i++)
             {
                 string[] cells = csv.GetRow(i);
