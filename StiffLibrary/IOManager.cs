@@ -9,16 +9,49 @@ namespace StiffLibrary
 {
     public static class IOManager
     {
-        public static String[] GetFile(string path)
+        public static String[] GetFile(string path, bool excludeLineBreaksInsideTexts = false)
         {
             List<String> lines = new List<string>();
             if (File.Exists(path))
             {
                 StreamReader sr = new StreamReader(path, true);
-                while (!sr.EndOfStream)
+                if (excludeLineBreaksInsideTexts)
                 {
-                    lines.Add(sr.ReadLine());
+                    String file = sr.ReadToEnd();
+                    Int32 index = 0;
+
+                    string lineBuffer = "";
+                    bool bOnText = false;
+                    while(index < file.Length)
+                    {
+                        char c = file[index];
+                        if (c == '"')
+                            bOnText = !bOnText;
+                        if(!bOnText && c == '\n')
+                        {
+                            lines.Add(lineBuffer);
+                            lineBuffer = "";
+                            index++;
+                            continue;
+                        }
+                        lineBuffer += c;
+                        index++;
+                    }
+                    if(lineBuffer != "")
+                    {
+                        lines.Add(lineBuffer);
+                        lineBuffer = "";
+                        index++;
+                    }
                 }
+                else
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        lines.Add(sr.ReadLine());
+                    }
+                }
+
                 sr.Close();
                 sr.Dispose();
             }
@@ -224,7 +257,7 @@ namespace StiffLibrary
     {
         public static CSV GetCSV(string path)
         {
-            string[] lines = IOManager.GetFile(path);
+            string[] lines = IOManager.GetFile(path, true);
 
             List<string> headers = new List<string>();
             List<List<string>> rowsList = new List<List<string>>();
@@ -256,7 +289,9 @@ namespace StiffLibrary
                     bIsHeader = false;
                 }
                 else
+                {
                     rowsList.Add(cells);
+                }
             }
             if (rowsList.Count <= 0)
                 return new CSV(new string[1] { "Error" }, new string[1, 1] { { "The CSV had no headers" } });
