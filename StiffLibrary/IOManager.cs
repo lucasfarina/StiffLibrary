@@ -215,6 +215,38 @@ namespace StiffLibrary
             return selectedCells.ToArray();
         }
 
+        public string[] SelectColumnCells(FName targetHeader, FName compareHeader, Predicate<string> predicate, bool dontRepeat = false)
+        {
+            string[] target = GetColumn(targetHeader);
+            string[] compare = GetColumn(compareHeader);
+
+            List<int> rows = new List<int>();
+            for (int i = 0; i < compare.Length; i++)
+            {
+                if (predicate(compare[i]))
+                {
+                    rows.Add(i);
+                }
+            }
+
+            List<string> selectedCells = new List<string>();
+            foreach (int i in rows)
+            {
+                if (dontRepeat)
+                {
+                    if (!selectedCells.Contains(target[i]))
+                    {
+                        selectedCells.Add(target[i]);
+                    }
+                }
+                else
+                {
+                    selectedCells.Add(target[i]);
+                }
+            }
+            return selectedCells.ToArray();
+        }
+
         public bool SetCell(FName column, int row, string newValue)
         {
             if (row < 0 || row >= _rowCount)
