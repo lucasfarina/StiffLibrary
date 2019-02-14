@@ -180,6 +180,17 @@ namespace StiffLibrary
         {
             return BCrypt.Net.BCrypt.Verify(me, storedHash);
         }
+
+        public static T[] AllEnumValues<T>(this T enumType) where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+            {
+                throw new ArgumentException("T must be an enumerated type");
+            }
+            return (T[])Enum.GetValues(typeof(T));
+        }
+
+
     }
 
 
