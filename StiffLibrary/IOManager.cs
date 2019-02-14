@@ -349,6 +349,7 @@ namespace StiffLibrary
                         onText = !onText;
                     else if(!onText && line[i] == ',')
                     {
+                        buffer = buffer.TrimEnd();
                         cells.Add(buffer);
                         buffer = "";
                         continue;
@@ -356,6 +357,7 @@ namespace StiffLibrary
 
                     buffer += line[i];
                 }
+                buffer = buffer.TrimEnd();
                 cells.Add(buffer);
                 if (bIsHeader)
                 {
