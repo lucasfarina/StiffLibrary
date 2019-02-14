@@ -183,7 +183,7 @@ namespace StiffLibrary
             return getColumn[row];
         }
 
-        public string[] SelectColumnCells(FName targetHeader, FName compareHeader, string compareValue)
+        public string[] SelectColumnCells(FName targetHeader, FName compareHeader, string compareValue, bool dontRepeat = false)
         {
             string[] target = GetColumn(targetHeader);
             string[] compare = GetColumn(compareHeader);
@@ -200,7 +200,17 @@ namespace StiffLibrary
             List<string> selectedCells = new List<string>();
             foreach(int i in rows)
             {
-                selectedCells.Add(target[i]);
+                if (dontRepeat)
+                {
+                    if (!selectedCells.Contains(target[i]))
+                    {
+                        selectedCells.Add(target[i]);
+                    }
+                }
+                else
+                {
+                    selectedCells.Add(target[i]);
+                }                
             }
             return selectedCells.ToArray();
         }
