@@ -271,7 +271,7 @@ namespace StiffLibrary
             for(int i = 0; i < selectedRowsList.Count; i++)
             {
                 
-                for(int w = 0; w < headers.Length; i++)
+                for(int w = 0; w < headers.Length; w++)
                 {
                     selectedRows[i, w] = selectedRowsList[i][w];
                 }
@@ -304,7 +304,7 @@ namespace StiffLibrary
             for (int i = 0; i < selectedRowsList.Count; i++)
             {
 
-                for (int w = 0; w < headers.Length; i++)
+                for (int w = 0; w < headers.Length; w++)
                 {
                     selectedRows[i, w] = selectedRowsList[i][w];
                 }
