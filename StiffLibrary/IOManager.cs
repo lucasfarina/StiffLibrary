@@ -247,6 +247,72 @@ namespace StiffLibrary
             return selectedCells.ToArray();
         }
 
+        public CSV SelectRows(FName compareHeader, string compareValue)
+        {
+            string[] compare = GetColumn(compareHeader);
+
+            List<int> rows = new List<int>();
+            for (int i = 0; i < compare.Length; i++)
+            {
+                if (compare[i] == compareValue)
+                {
+                    rows.Add(i);
+                }
+            }
+
+            List<string[]> selectedRowsList = new List<string[]>();
+            foreach (int i in rows)
+            {
+                selectedRowsList.Add(GetRow(i));
+            }
+            string[] headers = GetHeaderNames();
+            string[,] selectedRows = new string[selectedRowsList.Count, headers.Length];
+
+            for(int i = 0; i < selectedRowsList.Count; i++)
+            {
+                
+                for(int w = 0; w < headers.Length; i++)
+                {
+                    selectedRows[i, w] = selectedRowsList[i][w];
+                }
+            }
+
+            return new CSV(headers, selectedRows);
+        }
+
+        public CSV SelectRows(FName targetHeader, FName compareHeader, Predicate<string> predicate)
+        {
+            string[] compare = GetColumn(compareHeader);
+
+            List<int> rows = new List<int>();
+            for (int i = 0; i < compare.Length; i++)
+            {
+                if (predicate(compare[i]))
+                {
+                    rows.Add(i);
+                }
+            }
+
+            List<string[]> selectedRowsList = new List<string[]>();
+            foreach (int i in rows)
+            {
+                selectedRowsList.Add(GetRow(i));
+            }
+            string[] headers = GetHeaderNames();
+            string[,] selectedRows = new string[selectedRowsList.Count, headers.Length];
+
+            for (int i = 0; i < selectedRowsList.Count; i++)
+            {
+
+                for (int w = 0; w < headers.Length; i++)
+                {
+                    selectedRows[i, w] = selectedRowsList[i][w];
+                }
+            }
+
+            return new CSV(headers, selectedRows);
+        }
+
         public bool SetCell(FName column, int row, string newValue)
         {
             if (row < 0 || row >= _rowCount)
