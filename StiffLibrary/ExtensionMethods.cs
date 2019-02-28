@@ -10,6 +10,7 @@ namespace StiffLibrary
 {
     public static class ExtensionMethods
     {
+
         public static string combineLines(this string[] lines, string flavor = "")
         {
             string combined = "";

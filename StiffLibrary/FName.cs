@@ -71,5 +71,10 @@ namespace StiffLibrary
         {
             return _id;
         }
+
+        public static implicit operator FName (string s)
+        {
+            return new FName(s);
+        }
     }
 }
