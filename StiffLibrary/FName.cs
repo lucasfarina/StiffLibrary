@@ -20,7 +20,7 @@ namespace StiffLibrary
         public FName(string name = null)
         {
             string safeName = name.ToUpper();
-            if(safeName != null || safeName == "None")
+            if(safeName != null || safeName == "NONE")
             {
                 _name = safeName;
                 int myId = Array.FindIndex<string>(_nameMap, x => x == safeName);
