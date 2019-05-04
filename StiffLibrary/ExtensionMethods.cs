@@ -153,6 +153,7 @@ namespace StiffLibrary
                 case ClampType.LesserOrEqual:
                     return input <= threshold ? threshold + 1 : input;
             }
+            //Should never be returned
             return 0;
         }
 
