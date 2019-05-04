@@ -132,6 +132,30 @@ namespace StiffLibrary
             return input < min ? min : input > max ? max : input;
         }
 
+        public enum ClampType
+        {
+            Greater,
+            Lesser,
+            GreaterOrEqual,
+            LesserOrEqual
+        }
+
+        public static int ClampOneSide(this int input, ClampType clampType, int threshold)
+        {
+            switch (clampType)
+            {
+                case ClampType.Greater:
+                    return input > threshold ? threshold : input;
+                case ClampType.GreaterOrEqual:
+                    return input >= threshold ? threshold - 1 : input;
+                case ClampType.Lesser:
+                    return input < threshold ? threshold : input;
+                case ClampType.LesserOrEqual:
+                    return input <= threshold ? threshold + 1 : input;
+            }
+            return 0;
+        }
+
         public static T[] FilterBy<T>(this T[] me, Predicate<T> match)
         {
             List<T> tList = me.ToList();
