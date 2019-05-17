@@ -56,6 +56,7 @@
     <Compile Include="Mailing.cs" />
     <Compile Include="MyGrouper.cs" />
     <Compile Include="MySQLSingleton.cs" />
+    <Compile Include="Pile.cs" />
     <Compile Include="XML\XML.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="ExtensionMethods.cs" />
