@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace StiffLibrary
 {
@@ -21,6 +20,8 @@ namespace StiffLibrary
             return combined;
         }
 
+        /*===================== Using windows forms: needs to go to StiffFormsLibrary 
+         * 
         public static Control[] toArray(this Control.ControlCollection myControls)
         {
             List<Control> answer = new List<Control>();
@@ -46,6 +47,7 @@ namespace StiffLibrary
             }
             return listinha.ToArray();
         }
+        */
 
         public static T[] justType<T>(this object[] myArray)
         {
