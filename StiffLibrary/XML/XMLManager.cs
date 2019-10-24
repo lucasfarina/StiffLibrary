@@ -11,12 +11,18 @@ namespace StiffLibrary.XML
         public static string GetXMLFile(string path, out XMLFile xml)
         {
             string success = ""; //Empty equals success, error contains error message
-            xml = new XMLFile(new XMLPrologue(), new XMLTag("Error", "Couldn't get XMLFile at GetXMLFile(" + path + ").", new XMLTag[0], new XMLAttribute[0]));
             String[] lines = IOManager.GetFile(path);
+            return GetXMLFileFromLines(lines, out xml);
+        }
+
+        public static string GetXMLFileFromLines(string[] lines, out XMLFile xml)
+        {
+            string success = "";
+            xml = new XMLFile(new XMLPrologue(), new XMLTag("Error", "Couldn't get XMLFile at GetXMLFileFromLines.", new XMLTag[0], new XMLAttribute[0]));
             String stream = string.Join(string.Empty, lines);
             XMLPrologue prologue;
             string StreamLeft;
-            if(GetXMLProlog(stream, out prologue, out StreamLeft))
+            if (GetXMLProlog(stream, out prologue, out StreamLeft))
             {
                 xml.Prologue = prologue;
             }
@@ -28,7 +34,7 @@ namespace StiffLibrary.XML
             success = GetTags(StreamLeft, out tags);
             if (success == "")
             {
-                if(tags.Length == 1)
+                if (tags.Length == 1)
                 {
                     xml.Root = tags[0];
                 }
