@@ -113,7 +113,7 @@ namespace StiffLibrary
             }
             foreach(DirectoryInfo dirInfo in di.GetDirectories())
             {
-                filePaths.AddRange(GetAllFilePathsInDirectory(dirInfo.FullName));
+                filePaths.AddRange(GetAllFilePathsInDirectory(dirInfo.FullName, containingInName));
             }
             return filePaths.ToArray();
         }
