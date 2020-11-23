@@ -81,6 +81,42 @@ namespace StiffLibrary
         {
             File.Decrypt(path);
         }
+
+        public static bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+        public static bool DirectoryExists(string directoryPath)
+        {
+            return Directory.Exists(directoryPath);
+        }
+
+        public static void CreateDirectory(string directoryPath)
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        public static String[] GetAllFilePathsInDirectory(string directoryPath, string containingInName="")
+        {
+            DirectoryInfo di = new DirectoryInfo(directoryPath);
+            List<string> filePaths = new List<string>();
+            foreach(FileInfo filInfo in di.GetFiles())
+            {
+                if(containingInName == "")
+                {
+                    filePaths.Add(filInfo.FullName);
+                }
+                else if (filInfo.Name.Contains(containingInName))
+                {
+                    filePaths.Add(filInfo.FullName);
+                }
+            }
+            foreach(DirectoryInfo dirInfo in di.GetDirectories())
+            {
+                filePaths.AddRange(GetAllFilePathsInDirectory(dirInfo.FullName));
+            }
+            return filePaths.ToArray();
+        }
     }
 
     public struct CSV
